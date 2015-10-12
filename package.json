@@ -1,0 +1,37 @@
+{
+    "name": "node-rest-base",
+    "description": "A base project from which to start any node+restify project.",
+    "version": "0.0.1",
+    "private": true,
+    "keywords": [
+        "start",
+        "template",
+        "restify"
+    ],
+    "repository": { 
+        "type": "git",
+        "url": "https://github.com/Eagerod/node-rest-base.git"
+    },
+    "main": "app.js",
+    "dependencies": {
+        "restify": "4.0.3"
+    },
+    "devDependencies": {
+        "jsdoc": "3.3.2",
+        "eslint": "0.24.1",
+        "nodeunit": "0.9.1",
+        "istanbul": "0.3.17",
+        "request": "2.65.0"
+    },
+    "author": {
+        "name": "Aleem Haji",
+        "author": "hajial@gmail.com"
+    },
+    "scripts": {
+        "start": "node app.js",
+        "test": "DEBUG=1 ./node_modules/.bin/nodeunit tests/test.js",
+        "docs": "./node_modules/.bin/jsdoc --recurse ./src -d docs",
+        "lint": "./node_modules/.bin/eslint .",
+        "coverage": "DEBUG=1 ./node_modules/.bin/istanbul cover ./node_modules/.bin/nodeunit tests/test.js"
+    }
+}

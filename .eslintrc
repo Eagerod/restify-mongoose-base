@@ -1,0 +1,22 @@
+{
+    "rules": {
+        "indent": [2, 4],
+        "quotes": [2, "double"],
+        "linebreak-style": [2, "unix"],
+        "semi": [2, "always"],
+        "comma-dangle": [1, "never"],
+        "block-scoped-var": 2,
+        "brace-style": [2, "stroustrup"],
+        "camelcase": [2, {"properties": "always"}],
+        "no-multiple-empty-lines": [2, {"max": 2}],
+        "indent": [2, 4, {"indentSwitchCase": true}],
+        "max-nested-callbacks": [2, 3],
+        "no-mixed-spaces-and-tabs": 2,
+        "no-nested-ternary": 2,
+        "no-underscore-dangle": 0,
+        "no-shadow": 1
+    },
+    "env": {
+        "node": true
+    }
+}
