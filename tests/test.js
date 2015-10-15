@@ -20,13 +20,11 @@ function apiCall(reqObj, callback) {
 // it's perfectly predictable that they will be the first and last tests to run.
 
 module.exports = {
-    "Start server": function(test) {
+    "Start server": function retry(test) {
         if ( app.serving ) {
             return test.done();
         }
-        setTimeout(function() {
-            module.exports["Start server"](test); // eslint-disable-line new-cap
-        }, 25);
+        setTimeout(retry.bind(this, test), 25);
     },
     "Status controller": {
         "Get status": function(test) {
