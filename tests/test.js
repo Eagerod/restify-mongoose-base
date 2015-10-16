@@ -8,14 +8,14 @@ var app = require("..");
 // server. Because of the way nodeunit runs tests in the order they're defined,
 // it's perfectly predictable that they will be the first and last tests to run.
 module.exports = {
-    "Start server": function retry(test) {
+    "Start Server": function retry(test) {
         if ( app.serving ) {
             return test.done();
         }
         setTimeout(retry.bind(this, test), 25);
     },
-    "Status controller": require("./statuscontrollertests"),
-    "Shutdown server": function(test) {
+    "Status Controller": require("./statuscontrollertests"),
+    "Shutdown Server": function(test) {
         app.server.close(function() {
             test.done();
         });
