@@ -8,7 +8,7 @@ var restify = require("restify");
     routes that can be used for making sure that the server is up and running,
     and also that different error handlers are logging the way that they should.
 */
-function StatusController() {}
+var StatusController = module.exports;
 
 /**
     @function StatusController#getStatus
@@ -16,7 +16,7 @@ function StatusController() {}
 
     @returns 200 and a JSON object.
 */
-StatusController.prototype.getStatus = {
+StatusController.getStatus = {
     handler: function(req, res, next) {
         res.send(200, {status: "All systems operational."});
         return next();
@@ -30,7 +30,7 @@ StatusController.prototype.getStatus = {
 
     @returns A restify-handled error as one would appear in normal running code.
 */
-StatusController.prototype.manualError = {
+StatusController.manualError = {
     handler: function(req, res, next) {
         next(new restify.BadRequestError("I've made a huge mistake."));
     }
@@ -42,10 +42,8 @@ StatusController.prototype.manualError = {
 
     @throws An error that is handled by the restify uncaughtException handler.
 */
-StatusController.prototype.manualException = {
+StatusController.manualException = {
     handler: function() {
         throw new Error("I've made a critical mistake.");
     }
 };
-
-module.exports = new StatusController();
