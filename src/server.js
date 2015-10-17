@@ -13,7 +13,7 @@ var server = restify.createServer({
 // of moderate extending.
 server.use(restify.acceptParser(server.acceptable));
 server.use(restify.queryParser());
-server.use(restify.bodyParser());
+server.use(restify.bodyParser({rejectUnknown: true}));
 server.use(restify.authorizationParser()); // If you're doing your own auth.
 server.use(restify.CORS()); // eslint-disable-line new-cap
 

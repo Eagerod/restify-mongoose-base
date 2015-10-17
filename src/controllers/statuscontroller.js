@@ -47,3 +47,17 @@ StatusController.manualException = {
         throw new Error("I've made a critical mistake.");
     }
 };
+
+/**
+    @function StatusController#manualException
+    @desc Route that returns whatever the user sends in. This is used to test
+    things like the server's media types.
+
+    @returns The request body.
+*/
+StatusController.echo = {
+    handler: function(req, res, next) {
+        res.send(200, req.body);
+        return next();
+    }
+};

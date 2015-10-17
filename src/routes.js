@@ -27,6 +27,7 @@ Router.prototype.configureStatusController = function() {
     this.server.get("/status", StatusController.getStatus.handler);
     this.server.get("/error", StatusController.manualError.handler);
     this.server.get("/exception", StatusController.manualException.handler);
+    this.server.post("/echo", StatusController.echo.handler);
 };
 
 module.exports = function(server) {

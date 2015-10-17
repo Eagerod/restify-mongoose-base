@@ -36,5 +36,27 @@ module.exports = {
             });
             test.done();
         });
+    },
+    "Echo": {
+        "Success": function(test) {
+            test.expect(2);
+            apiCall({url: "http://localhost:8080/echo", method: "POST", json: {"a": "b"}}, function(err, resp, body) {
+                test.ifError(err);
+                test.deepEqual(body, {a: "b"});
+                test.done();
+            });
+        },
+        "Content-Type failure": function(test) {
+            test.expect(3);
+            apiCall({url: "http://localhost:8080/echo", method: "POST", body: "{\"a\": \"b\"}"}, function(err, resp, body) {
+                test.ifError(err);
+                test.deepEqual(resp.statusCode, 415);
+                test.deepEqual(body, {
+                    code: "UnsupportedMediaTypeError",
+                    message: "application/octet-stream"
+                });
+                test.done();
+            });
+        }
     }
 };
