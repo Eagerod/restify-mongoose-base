@@ -1,6 +1,6 @@
 "use strict";
 
-var utils = require("./testutils");
+var utils = require("../../testutils");
 
 var apiCall = utils.apiCall;
 

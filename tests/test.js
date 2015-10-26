@@ -14,7 +14,7 @@ module.exports = {
         }
         setTimeout(retry.bind(this, test), 25);
     },
-    "Status Controller": require("./statuscontrollertests"),
+    "Status Controller": require("./src/controllers/statuscontrollertests"),
     "Shutdown Server": function(test) {
         app.server.close(function() {
             test.done();
