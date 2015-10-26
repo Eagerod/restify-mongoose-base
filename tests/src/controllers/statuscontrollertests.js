@@ -1,13 +1,9 @@
 "use strict";
 
-var utils = require("../../testutils");
-
-var apiCall = utils.apiCall;
-
 module.exports = {
     "Get Status": function(test) {
         test.expect(2);
-        apiCall({url: "http://localhost:8080/status", method: "GET"}, function(err, resp, body) {
+        this.apiCall({url: "http://localhost:8080/status", method: "GET"}, function(err, resp, body) {
             test.ifError(err);
             test.deepEqual(body, {
                 status: "All systems operational."
@@ -17,7 +13,7 @@ module.exports = {
     },
     "Manual Error": function(test) {
         test.expect(2);
-        apiCall({url: "http://localhost:8080/error", method: "GET"}, function(err, resp, body) {
+        this.apiCall({url: "http://localhost:8080/error", method: "GET"}, function(err, resp, body) {
             test.ifError(err);
             test.deepEqual(body, {
                 code: "BadRequestError",
@@ -28,7 +24,7 @@ module.exports = {
     },
     "Manual Exception": function(test) {
         test.expect(2);
-        apiCall({url: "http://localhost:8080/exception", method: "GET"}, function(err, resp, body) {
+        this.apiCall({url: "http://localhost:8080/exception", method: "GET"}, function(err, resp, body) {
             test.ifError(err);
             test.deepEqual(body, {
                 code: "InternalError",
@@ -40,7 +36,7 @@ module.exports = {
     "Echo": {
         "Success": function(test) {
             test.expect(2);
-            apiCall({url: "http://localhost:8080/echo", method: "POST", json: {"a": "b"}}, function(err, resp, body) {
+            this.apiCall({url: "http://localhost:8080/echo", method: "POST", json: {"a": "b"}}, function(err, resp, body) {
                 test.ifError(err);
                 test.deepEqual(body, {a: "b"});
                 test.done();
@@ -48,7 +44,7 @@ module.exports = {
         },
         "Content-Type failure": function(test) {
             test.expect(3);
-            apiCall({url: "http://localhost:8080/echo", method: "POST", body: "{\"a\": \"b\"}"}, function(err, resp, body) {
+            this.apiCall({url: "http://localhost:8080/echo", method: "POST", body: "{\"a\": \"b\"}"}, function(err, resp, body) {
                 test.ifError(err);
                 test.deepEqual(resp.statusCode, 415);
                 test.deepEqual(body, {
