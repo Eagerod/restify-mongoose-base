@@ -2,7 +2,7 @@
 
 var StatusControllerTests = module.exports;
 var SystemConfigTests = StatusControllerTests["System Config"] = {};
-var EchoTests = StatusControllerTests["Echo"] = {};
+var EchoTests = StatusControllerTests["Echo Routes"] = {};
 
 SystemConfigTests["Get Status"] = function(test) {
     test.expect(2);
