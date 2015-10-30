@@ -42,7 +42,7 @@ server.on("uncaughtException", function(req, res, route, err) {
     });
 });
 
-// istanbul ignore next
+// istanbul ignore next: Would actually require killing tests, I think.
 process.on("uncaughtException", function(exc) {
     server.log.fatal(exc);
     throw exc;

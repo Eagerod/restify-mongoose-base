@@ -14,7 +14,7 @@
 
 var config = module.exports;
 
-// istanbul ignore next
+// istanbul ignore next: The || false gets missed, because always debug.
 config.DEBUG = process.env.DEBUG || false;
 
 config.PORT = process.env.PORT || 8080;
