@@ -22,6 +22,7 @@ function Router(server) {
     @property /status {GET} Return 200.
     @property /error {GET} Return an error.
     @property /exception {GET} Throw an exception.
+    @property /echo {POST} Return the JSON object the user sends in.
 */
 Router.prototype.configureStatusController = function() {
     this.server.get("/status", StatusController.getStatus.handler);
