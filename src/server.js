@@ -29,7 +29,7 @@ server.listen(config.PORT, function() {
 // Different error logs of increasing severity.
 server.on("after", function(req, res, route, err) {
     if ( err ) {
-        server.log.warn(err);
+        req.log.warn(err);
     }
 });
 
