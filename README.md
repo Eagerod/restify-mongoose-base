@@ -12,7 +12,10 @@ This is what this project skeleton includes:
 
 It currently only includes a single controller with a few routes that can be used for testing error handlers.
 
-The application follows a much more object oriented approach than I originally planned, but in the interest of good documentation, it turned out alright. 
+The application follows a much more object oriented approach than I originally planned, but in the interest of good documentation, it turned out alright.
+
+The `StatusController` is currently laid out so that it can easily be wired up using [Lumina](https://github.com/Eagerod/lumina), if it's required for the project.
+If not, it's a little weirdly laid out, and can be modified. 
 
 ## Docs
 ```
