@@ -49,4 +49,4 @@ process.on("uncaughtException", function(exc) {
 });
 
 // Routes
-require("./routes.js")(server);
+require("./routes")(server);
