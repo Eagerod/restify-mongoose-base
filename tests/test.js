@@ -9,7 +9,9 @@ var app = require("..");
 function apiCall(reqObj, callback) {
     request(reqObj, function(err, resp, body) {
         if ( typeof body === "string" && body.length > 0 ) {
-            body = JSON.parse(body);
+            if ( body[0] === "{" || body[0] === "[" ) {
+                body = JSON.parse(body);
+            }
         }
         return callback(err, resp, body);
     });
