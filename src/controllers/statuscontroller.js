@@ -49,7 +49,7 @@ StatusController.manualException = {
 };
 
 /**
-    @function StatusController#manualException
+    @function StatusController#echo
     @desc Route that returns whatever the user sends in. This is used to test
     things like the server's media types.
 
