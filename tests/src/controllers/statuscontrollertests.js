@@ -5,9 +5,10 @@ var SystemConfigTests = StatusControllerTests["System Config"] = {};
 var EchoTests = StatusControllerTests["Echo Routes"] = {};
 
 SystemConfigTests["Get Status"] = function(test) {
-    test.expect(2);
+    test.expect(3);
     this.apiCall({url: "http://localhost:8080/status", method: "GET"}, function(err, resp, body) {
         test.ifError(err);
+        test.equal(resp.statusCode, 200);
         test.deepEqual(body, {
             status: "All systems operational."
         });
@@ -16,9 +17,10 @@ SystemConfigTests["Get Status"] = function(test) {
 };
 
 SystemConfigTests["Manual Error"] = function(test) {
-    test.expect(2);
+    test.expect(3);
     this.apiCall({url: "http://localhost:8080/error", method: "GET"}, function(err, resp, body) {
         test.ifError(err);
+        test.equal(resp.statusCode, 400);
         test.deepEqual(body, {
             code: "BadRequestError",
             message: "I've made a huge mistake."
@@ -28,9 +30,10 @@ SystemConfigTests["Manual Error"] = function(test) {
 };
 
 SystemConfigTests["Manual Exception"] = function(test) {
-    test.expect(2);
+    test.expect(3);
     this.apiCall({url: "http://localhost:8080/exception", method: "GET"}, function(err, resp, body) {
         test.ifError(err);
+        test.equal(resp.statusCode, 500);
         test.deepEqual(body, {
             code: "InternalError",
             message: "I've made a critical mistake."
@@ -40,9 +43,10 @@ SystemConfigTests["Manual Exception"] = function(test) {
 };
 
 EchoTests["Success"] = function(test) {
-    test.expect(2);
+    test.expect(3);
     this.apiCall({url: "http://localhost:8080/echo", method: "POST", json: {"a": "b"}}, function(err, resp, body) {
         test.ifError(err);
+        test.equal(resp.statusCode, 200);
         test.deepEqual(body, {a: "b"});
         test.done();
     });
