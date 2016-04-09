@@ -1,5 +1,6 @@
 "use strict";
 
+var mongoose = require("mongoose");
 var restify = require("restify");
 
 /**
@@ -45,6 +46,32 @@ StatusController.manualError = {
 StatusController.manualException = {
     handler: function() {
         throw new Error("I've made a critical mistake.");
+    }
+};
+
+/**
+    @function StatusController#database
+    @desc Get the current status of the database.
+*/
+StatusController.database = {
+    handler: function(req, res, next) {
+        var badConnections = mongoose.connections.filter(function(connection) {
+            return connection.readyState !== 1;
+        });
+
+        if (badConnections.length) {
+            req.log.error({
+                msg: "Database connections failing",
+                connections: badConnections.map(function(connection) {
+                    return connection.host + ":" + connection.port;
+                })
+            });
+            res.send(500);
+            return next();
+        }
+
+        res.send(200);
+        return next();
     }
 };
 

@@ -14,14 +14,24 @@
     },
     "main": "app.js",
     "dependencies": {
+        "bunyan": "1.8.0",
+        "lumina": "0.1.1",
+        "lumina-mongoose": "0.1.0",
+        "mongoose": "4.4.10",
+        "mongoose-object-stream": "0.0.2",
+        "node-uuid": "1.4.7",
+        "request": "2.65.0",
         "restify": "4.0.3"
     },
     "devDependencies": {
+        "async": "1.5.2",
         "jsdoc": "3.3.2",
         "eslint": "0.24.1",
         "nodeunit": "0.9.1",
         "istanbul": "0.3.17",
-        "request": "2.65.0"
+        "request": "2.65.0",
+        "supervisor": "0.9.1",
+        "nodeunit-mock": "0.0.4"
     },
     "author": {
         "name": "Aleem Haji",
@@ -29,6 +39,7 @@
     },
     "scripts": {
         "start": "node app.js",
+        "debug": "DEBUG=1 ./node_modules/.bin/supervisor node app.js",
         "test": "DEBUG=1 ./node_modules/.bin/nodeunit tests/test.js",
         "docs": "./node_modules/.bin/jsdoc --recurse ./src -d docs",
         "lint": "./node_modules/.bin/eslint .",

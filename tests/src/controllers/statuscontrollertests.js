@@ -1,8 +1,15 @@
 "use strict";
 
+var mongoose = require("mongoose");
+var mock = require("nodeunit-mock");
+
+var Models = require("../../../src/models");
+var Log = Models.Log;
+
 var StatusControllerTests = module.exports;
 var SystemConfigTests = StatusControllerTests["System Config"] = {};
 var EchoTests = StatusControllerTests["Echo Routes"] = {};
+var DatabaseTests = StatusControllerTests["Database Routes"] = {};
 
 SystemConfigTests["Get Status"] = function(test) {
     test.expect(3);
@@ -61,6 +68,47 @@ EchoTests["Failure Content-Type Incorrect"] = function(test) {
             code: "UnsupportedMediaTypeError",
             message: "application/octet-stream"
         });
+        test.done();
+    });
+};
+
+DatabaseTests["Success"] = function(test) {
+    test.expect(3);
+    this.apiCall("http://localhost:8080/database", function(err, resp, body) {
+        test.ifError(err);
+        test.equal(resp.statusCode, 200);
+        test.equal(body, "");
+        test.done();
+    });
+};
+
+DatabaseTests["Connections Failing"] = function(test) {
+    test.expect(3);
+
+    mock(test, mongoose.connections, "filter", function() {
+        return mongoose.connections.map(function(connection) {
+            return {readyState: 2, host: connection.host, port: connection.port};
+        });
+    });
+
+    this.apiCall("http://localhost:8080/database", function(err, resp, body) {
+        test.ifError(err);
+        test.equal(resp.statusCode, 500);
+        test.equal(body, "");
+
+        test.done();
+    });
+};
+
+DatabaseTests["Connections Error"] = function(test) {
+    test.expect(1);
+    mock(test, Log, "find", function(callback) {
+        mongoose.connections[0].emit("error");
+        callback(new Error("Error emitted"));
+    });
+
+    Log.find(function(err) {
+        test.ok(err);
         test.done();
     });
 };

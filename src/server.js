@@ -1,12 +1,29 @@
 "use strict";
 
 var restify = require("restify");
+var bunyan = require("bunyan");
+var uuid = require("node-uuid");
+var mongoose = require("mongoose");
+var MongooseObjectStream = require("mongoose-object-stream");
 
 var config = require("./config");
 
+var Log = require("./models").Log;
+
+var logStream = new MongooseObjectStream(Log);
+
+module.exports.logStream = logStream;
+
+var log = bunyan.createLogger({
+    name: "example-logger",
+    level: "debug",
+    stream: logStream
+});
+
 var server = restify.createServer({
-    name: "Restify Server",
-    version: "0.0.1"
+    name: "Restify Mongoose Server",
+    version: "0.0.1",
+    log: log
 });
 
 // Some basic middleware that will either be needed, or be useful for any kind
@@ -17,13 +34,31 @@ server.use(restify.bodyParser({rejectUnknown: true}));
 server.use(restify.authorizationParser()); // If you're doing your own auth.
 server.use(restify.CORS()); // eslint-disable-line new-cap
 
+// Upgrade the request logger to include a unique request ID, and the url that
+// it's being used in so that they can be queried/debugged in the future.
+server.use(function(req, res, next) {
+    req.log = req.log.child({
+        url: req.url,
+        requestId: uuid.v4()
+    });
+    return next();
+});
+
 module.exports.server = server;
 
 // Only start listening after db connection is open.
-server.listen(config.PORT, function() {
-    server.log.info("%s listening at %s", server.name, server.url);
-    console.log("%s listening at %s", server.name, server.url);
-    module.exports.serving = true;
+var connection = mongoose.connect(config.DATABASE).connection;
+connection.once("open", function() {
+    server.listen(config.PORT, function() {
+        server.log.info("%s listening at %s", server.name, server.url);
+        console.log("%s listening at %s", server.name, server.url);
+        module.exports.serving = true;
+        module.exports.database = connection;
+    });
+});
+
+connection.on("error", function(err) {
+    server.log.error(err);
 });
 
 // Different error logs of increasing severity.
