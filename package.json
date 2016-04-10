@@ -1,16 +1,17 @@
 {
-    "name": "node-restify-base",
-    "description": "A base project from which to start any node+restify project.",
+    "name": "restify-mongoose-base",
+    "description": "A base project from which to start any restify+mongoose project.",
     "version": "0.0.1",
     "private": true,
     "keywords": [
         "start",
         "template",
-        "restify"
+        "restify",
+        "mongoose"
     ],
     "repository": {
         "type": "git",
-        "url": "https://github.com/Eagerod/node-restify-base.git"
+        "url": "https://github.com/Eagerod/restify-mongoose-base.git"
     },
     "main": "app.js",
     "dependencies": {
@@ -20,7 +21,6 @@
         "mongoose": "4.4.10",
         "mongoose-object-stream": "0.0.2",
         "node-uuid": "1.4.7",
-        "request": "2.65.0",
         "restify": "4.0.3"
     },
     "devDependencies": {

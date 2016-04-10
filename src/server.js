@@ -6,8 +6,9 @@ var uuid = require("node-uuid");
 var mongoose = require("mongoose");
 var MongooseObjectStream = require("mongoose-object-stream");
 
-var config = require("./config");
+var packageJson = require("../package.json")
 
+var config = require("./config");
 var Log = require("./models").Log;
 
 var logStream = new MongooseObjectStream(Log);
@@ -15,14 +16,14 @@ var logStream = new MongooseObjectStream(Log);
 module.exports.logStream = logStream;
 
 var log = bunyan.createLogger({
-    name: "example-logger",
-    level: "debug",
+    name: packageJson.name,
+    level: config.DEFAULT_LOG_LEVEL,
     stream: logStream
 });
 
 var server = restify.createServer({
-    name: "Restify Mongoose Server",
-    version: "0.0.1",
+    name: packageJson.name,
+    version: packageJson.version,
     log: log
 });
 
@@ -35,7 +36,7 @@ server.use(restify.authorizationParser()); // If you're doing your own auth.
 server.use(restify.CORS()); // eslint-disable-line new-cap
 
 // Upgrade the request logger to include a unique request ID, and the url that
-// it's being used in so that they can be queried/debugged in the future.
+// is being used in so that they can be queried/debugged in the future.
 server.use(function(req, res, next) {
     req.log = req.log.child({
         url: req.url,

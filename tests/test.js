@@ -57,6 +57,8 @@ module.exports = {
     "Log Controller": require("./src/controllers/logcontrollertests"),
     "Shutdown Server": function(test) {
         app.server.close(function() {
+            // Because logs are still being written to the database from the bunyan logger, end the logger so there
+            // are no flows that are trying to write to the DB asynchronously.
             app.logStream.on("finish", function() {
                 app.database.close(function() {
                     test.done();

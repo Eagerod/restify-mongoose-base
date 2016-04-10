@@ -9,9 +9,9 @@ var LogController = module.exports;
 
 LogController.get = {
     handler: function(req, res, next) {
-        var level = bunyan.resolveLevel(req.query.level || config.DEFAULT_LOG_LEVEL);
+        var level = bunyan.resolveLevel(req.query.level || config.DEFAULT_LOG_DOWNLOAD_LEVEL);
         var startTime = new Date();
-        startTime.setTime(startTime.getTime() + (parseInt(req.query.start) || config.DEFAULT_LOG_INTERVAL));
+        startTime.setTime(startTime.getTime() + (parseInt(req.query.start) || config.DEFAULT_LOG_DOWNLOAD_INTERVAL));
         var endTime = new Date();
         endTime.setTime(endTime.getTime() + parseInt(req.query.end || 0));
 

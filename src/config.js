@@ -26,5 +26,6 @@ config.PORT = process.env.PORT || 8080;
 
 config.DATABASE = process.env.DATABASE || "localhost:27017/testdatabase";
 
-config.DEFAULT_LOG_LEVEL = "info";
-config.DEFAULT_LOG_INTERVAL = -(60 * 60 * 1000);
+config.DEFAULT_LOG_LEVEL = "debug";
+config.DEFAULT_LOG_DOWNLOAD_LEVEL = "info";
+config.DEFAULT_LOG_DOWNLOAD_INTERVAL = -(60 * 60 * 1000);
