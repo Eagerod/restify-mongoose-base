@@ -5,8 +5,21 @@ var bunyan = require("bunyan");
 var config = require("../config");
 var Log = require("../models").Log;
 
+/**
+    @class LogController
+    @classdesc Controller that sends out the system's logging information so
+    that it can be used for debugging/alerting purposes.
+*/
 var LogController = module.exports;
 
+/**
+    @function LogController#get
+    @desc Fetches logs for a given interval and with minimum log levels, and then
+    returns them back grouped by request. 
+    Returns logs in reverse chronological order.
+
+    @returns An array of logs.
+*/
 LogController.get = {
     handler: function(req, res, next) {
         var level = bunyan.resolveLevel(req.query.level || config.DEFAULT_LOG_DOWNLOAD_LEVEL);

@@ -15,35 +15,47 @@ var LogTests = LogControllerTests["GET /logs"] = {};
 LogTests.setUp = function(done) {
     // Write some logs that will and won't be aggregated into certain requests.
     // Need requestId, because we only seek request logs.
+    // Logs are written way too quickly without any extra waiting. Add in 2 ms 
+    // of delay so that the timestamps actually end up different.
 
     // Only debug logs
     var log = app.server.log.child({requestId: uuid.v4()});
     log.debug("A debug log!");
-    log.debug("Another debug log!");
+    setTimeout(function() {
+        log.debug("Another debug log!");
+    }, 2)
 
     // A debug and an info
-    log = app.server.log.child({requestId: uuid.v4()});
-    log.debug("A debug log!");
-    log.info("An info log!");
+    setTimeout(function() {
+        var log = app.server.log.child({requestId: uuid.v4()});
+        log.debug("A debug log!");
+        setTimeout(function() {
+            log.info("An info log!");
+        }, 2);
+    }, 4);
 
     // An info and a warn
-    log = app.server.log.child({requestId: uuid.v4()});
-    log.info("An info log!");
-    log.warn("A warning log!");
+    setTimeout(function() {
+        var log = app.server.log.child({requestId: uuid.v4()});
+        log.info("An info log!");
+        setTimeout(function() {
+            log.warn("A warning log!");
 
-    app.logStream.on("finish", function() {
-        // More hax. Have to recreate the stream each time through, because the stream has been ended.
-        app.logStream = new MongooseObjectStream(Log);
+            app.logStream.on("finish", function() {
+                // More hax. Have to recreate the stream each time through, because the stream has been ended.
+                app.logStream = new MongooseObjectStream(Log);
 
-        app.server.log = bunyan.createLogger({
-            name: "example-logger",
-            level: "debug",
-            stream: app.logStream
-        });
+                app.server.log = bunyan.createLogger({
+                    name: "example-logger",
+                    level: "debug",
+                    stream: app.logStream
+                });
 
-        done();
-    });
-    app.logStream.end();
+                done();
+            });
+            app.logStream.end();
+        }, 2);
+    }, 8);
 };
 
 LogTests["Success"] = function(test) {
@@ -57,12 +69,13 @@ LogTests["Success"] = function(test) {
         var expectedMessages = [
             ["An info log!", "A warning log!"],
             ["A debug log!", "An info log!"]
-        ].sort();
+        ];
+
         var messages = body.map(function(request) {
             return request.logs.map(function(log) {
                 return log.msg;
             });
-        }).sort();
+        });
 
         test.deepEqual(expectedMessages, messages);
         test.done();
@@ -78,15 +91,16 @@ LogTests["Success Level Provided"] = function(test) {
         test.equal(body.length, 3);
 
         var expectedMessages = [
-            ["A debug log!", "Another debug log!"],
             ["An info log!", "A warning log!"],
-            ["A debug log!", "An info log!"]
-        ].sort();
+            ["A debug log!", "An info log!"],
+            ["A debug log!", "Another debug log!"]
+        ];
+
         var messages = body.map(function(request) {
             return request.logs.map(function(log) {
                 return log.msg;
             });
-        }).sort();
+        });
 
         test.deepEqual(expectedMessages, messages);
         test.done();
