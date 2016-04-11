@@ -35,8 +35,8 @@ LogController.get = {
                         $exists: 1
                     },
                     time: {
-                        $gte: startTime.toISOString(),
-                        $lte: endTime.toISOString()
+                        $gte: startTime,
+                        $lte: endTime
                     }
                 }
             },
