@@ -9,8 +9,10 @@ var mongoose = require("mongoose");
 
 /**
     @class Log
-    @classdesc Completely empty schema to allow for whatever Bunyan wants.
+    @classdesc Schema that provides a couple indexes where allowed for bunyan logs.
 */
-var logSchema = new mongoose.Schema({}, {strict: false});
+var logSchema = new mongoose.Schema({
+    level: {type: Number, index:true}
+}, {strict: false});
 
 module.exports = mongoose.model("Log", logSchema);
