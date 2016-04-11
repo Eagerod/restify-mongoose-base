@@ -6,7 +6,7 @@ var uuid = require("node-uuid");
 var mongoose = require("mongoose");
 var MongooseObjectStream = require("mongoose-object-stream");
 
-var packageJson = require("../package.json")
+var packageJson = require("../package.json");
 
 var config = require("./config");
 var Log = require("./models").Log;

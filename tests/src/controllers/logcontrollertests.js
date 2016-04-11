@@ -15,7 +15,7 @@ var LogTests = LogControllerTests["GET /logs"] = {};
 LogTests.setUp = function(done) {
     // Write some logs that will and won't be aggregated into certain requests.
     // Need requestId, because we only seek request logs.
-    // Logs are written way too quickly without any extra waiting. Add in 2 ms 
+    // Logs are written way too quickly without any extra waiting. Add in 2 ms
     // of delay so that the timestamps actually end up different.
 
     // Only debug logs
@@ -23,7 +23,7 @@ LogTests.setUp = function(done) {
     log.debug("A debug log!");
     setTimeout(function() {
         log.debug("Another debug log!");
-    }, 2)
+    }, 2);
 
     // A debug and an info
     setTimeout(function() {

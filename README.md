@@ -1,6 +1,7 @@
-# Node REST API Starter
+# Mongoose REST API Starter
+
 I made this because I don't particularly like copying out project structure from each of my projects, constantly forgetting to steal certain pieces, or bring in more than is necessary.
-This isn't really something that should be cloned for anything, but rather downloaded and used as a first commit, or even the beginning of a first commit of a project that will host a REST API using Restify.
+This isn't really something that should be cloned for anything, but rather downloaded and used as a first commit, or even the beginning of a first commit of a project that will host a REST API using Mongoose.
 
 This is what this project skeleton includes:
 
@@ -8,27 +9,33 @@ This is what this project skeleton includes:
 2. Tests dependency
 3. Linter dependency
 4. Code coverage dependency
-5. Some tests that make sure that the framework is properly configured.
+5. Debug dependency
+6. Some tests that make sure that the framework is properly configured.
+7. An entire logging framework that can pretty easily handle an alerting system.
 
 ## Contents
 
-It currently only includes a single controller with a few routes that can be used for testing error handlers.
+It currently only includes a only two controllers with a few routes that can be used for testing error handlers, and fetching the app's logs.
 
 The application follows a much more object oriented approach than I originally planned, but in the interest of good documentation, it turned out alright.
 
-The `StatusController` is currently laid out so that it can easily be wired up using [Lumina](https://github.com/Eagerod/lumina), if it's required for the project.
-If not, it's a little weirdly laid out, and can be modified. 
+The `StatusController` is currently wired up with [Lumina](https://github.com/Eagerod/lumina).
 
-There is no database dependency, so it's up to you to decide what you want to do with the app's data. 
+The `LogController` is set up to use MongoDB's aggregation framework to return nicely structured logs for all HTTP requests.
 
 ### Routes
 
 #### Status
 
 - `/status` - Simple status handler that just returns 200
+- `/database` - Handler that returns 200 if all database connections are good.
 - `/error` - Handler that responds with a restify error.
 - `/exception` - Handler that raises an exception that's handled by the restify uncaught exception handler.
 - `/echo` - Handler that responds with the body it's given. 
+
+#### Logs
+
+- `logs` - Handler that responds with logs organized by HTTP request. 
 
 ## Docs
 ```
@@ -57,3 +64,10 @@ npm run coverage
 ```
 Runs the tests with the application in debug mode, and outputs the coverage report to a folder called `coverage`.
 `coverage` runs with the debug flag set, so it uses the same paths as the normal `npm test` command.
+
+## Debug
+```
+npm run debug
+```
+Runs supervisor so that any changes in the application's code causes the application to terminate the relaunch.
+Runs with the debug flag set.

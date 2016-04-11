@@ -12,7 +12,7 @@
     @property DATABASE {String} The database connection string for the application's MongoDB instance.
     Defaults to a local database called "testdatabase"
     @property DEFAULT_LOG_LEVEL {String} The log level assigned to the bunyan loggers.
-    @property DEFAULT_LOG_DOWNLOAD_LEVEL - {String} - The minimum default level 
+    @property DEFAULT_LOG_DOWNLOAD_LEVEL - {String} - The minimum default level
     that log are shown in the logs controller.
     Defaults to 'info'
     @property DEFAULT_LOG_DOWNLOAD_INTERVAL {String} The number of seconds to seek back in time for log search.

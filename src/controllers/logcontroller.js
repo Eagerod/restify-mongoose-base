@@ -15,7 +15,7 @@ var LogController = module.exports;
 /**
     @function LogController#get
     @desc Fetches logs for a given interval and with minimum log levels, and then
-    returns them back grouped by request. 
+    returns them back grouped by request.
     Returns logs in reverse chronological order.
 
     @returns An array of logs.
