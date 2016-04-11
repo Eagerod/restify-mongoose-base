@@ -21,6 +21,14 @@ If not, it's a little weirdly laid out, and can be modified.
 
 There is no database dependency, so it's up to you to decide what you want to do with the app's data. 
 
+### Routes
+
+#### Status
+
+- `/status` - Simple status handler that just returns 200
+- `/error` - Handler that responds with a restify error.
+- `/exception` - Handler that raises an exception that's handled by the restify uncaught exception handler.
+- `/echo` - Handler that responds with the body it's given. 
 
 ## Docs
 ```
