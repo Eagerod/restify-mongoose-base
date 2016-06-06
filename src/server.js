@@ -40,6 +40,7 @@ server.use(restify.CORS()); // eslint-disable-line new-cap
 server.use(function(req, res, next) {
     req.log = req.log.child({
         url: req.url,
+        method: req.method,
         requestId: uuid.v4()
     });
     return next();
