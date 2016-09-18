@@ -19,7 +19,8 @@ var StatusController = module.exports;
 */
 StatusController.getStatus = {
     handler: function(req, res, next) {
-        res.send(200, {status: "All systems operational."});
+        res.status(200);
+        res.send({status: "All systems operational."});
         return next();
     }
 };
@@ -66,11 +67,13 @@ StatusController.database = {
                     return connection.host + ":" + connection.port;
                 })
             });
-            res.send(500);
+            res.status(500);
+            res.end();
             return next();
         }
 
-        res.send(200);
+        res.status(200);
+        res.send();
         return next();
     }
 };
@@ -84,7 +87,8 @@ StatusController.database = {
 */
 StatusController.echo = {
     handler: function(req, res, next) {
-        res.send(200, req.body);
+        res.status(200);
+        res.send(req.body);
         return next();
     }
 };

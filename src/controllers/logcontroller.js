@@ -96,6 +96,7 @@ LogController.get = {
                     return result;
                 });
 
+                res.status(200);
                 res.send(results);
                 return next();
             }

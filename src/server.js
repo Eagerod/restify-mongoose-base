@@ -73,7 +73,8 @@ server.on("after", function(req, res, route, err) {
 server.on("uncaughtException", function(req, res, route, err) {
     req.log.error(err);
     // Mimic the regular restify uncaught exception handler.
-    res.send(500, {
+    res.status(500);
+    res.send({
         code: "InternalError",
         message: err.message
     });
