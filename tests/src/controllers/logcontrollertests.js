@@ -1,9 +1,7 @@
 "use strict";
 
-var bunyan = require("bunyan");
 var mock = require("nodeunit-mock");
 var uuid = require("node-uuid");
-var MongooseObjectStream = require("mongoose-object-stream");
 
 var app = require("../../..");
 var Models = require("../../../src/models");
@@ -13,6 +11,7 @@ var LogControllerTests = module.exports;
 var LogTests = LogControllerTests["GET /logs"] = {};
 
 LogTests.setUp = function(done) {
+    var self = this;
     // Write some logs that will and won't be aggregated into certain requests.
     // Need requestId, because we only seek request logs.
     // Logs are written way too quickly without any extra waiting. Add in 2 ms
@@ -41,19 +40,7 @@ LogTests.setUp = function(done) {
         setTimeout(function() {
             log.warn("A warning log!");
 
-            app.logStream.on("finish", function() {
-                // More hax. Have to recreate the stream each time through, because the stream has been ended.
-                app.logStream = new MongooseObjectStream(Log);
-
-                app.server.log = bunyan.createLogger({
-                    name: "example-logger",
-                    level: "debug",
-                    stream: app.logStream
-                });
-
-                done();
-            });
-            app.logStream.end();
+            self.waitForLogs(done);
         }, 2);
     }, 8);
 };

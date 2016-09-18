@@ -1,11 +1,15 @@
 "use strict";
 
 var async = require("async");
+var bunyan = require("bunyan");
+var MongooseObjectStream = require("mongoose-object-stream");
 var request = require("request");
 
 var app = require("..");
 var config = require("../src/config");
 
+var Models = require("../src/models");
+var Log = Models.Log;
 
 if ( process.env.PORT ) {
     throw new Error("Cannot use custom port for test execution.");
@@ -37,6 +41,24 @@ function removeAllModels(callback) {
     }, callback);
 }
 
+// Somewhat hacky function that recreates the application logger in the event that a particular test depends on certain
+// logs being present.
+// Calls back when the logger has been ended, has finished writing all outstanding logs, and recreated.
+function waitForLogs(callback) {
+    app.logStream.on("finish", function() {
+        app.logStream = new MongooseObjectStream(Log);
+
+        app.server.log = bunyan.createLogger({
+            name: "example-logger",
+            level: "debug",
+            stream: app.logStream
+        });
+
+        callback();
+    });
+    app.logStream.end();
+}
+
 // The first and last tests in this file are a little weird, since they don't
 // actually test anything, but they take care of starting and stopping the
 // server. Because of the way nodeunit runs tests in the order they're defined,
@@ -44,6 +66,7 @@ function removeAllModels(callback) {
 module.exports = {
     "setUp": function(done) {
         this.apiCall = apiCall;
+        this.waitForLogs = waitForLogs;
 
         removeAllModels(done);
     },
