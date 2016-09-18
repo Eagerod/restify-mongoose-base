@@ -13,35 +13,32 @@ var ServerTests = module.exports;
 var LogTests = ServerTests["Logging"] = {};
 
 LogTests["Records Request Information"] = function(test) {
-    this.apiCall("http://localhost:8080/logs", function(err, resp, body) {
+    var self = this;
+
+    test.expect(10);
+    var headers = {
+        "User-Agent": "Test Runner"
+    };
+
+    this.apiCall({url: "http://localhost:8080/logs", headers: headers}, function(err, resp, body) {
         test.ifError(err);
         test.equal(resp.statusCode, 200);
         test.deepEqual(body, []);
 
         // After the request has completed, the webserver records a log containing info about the request.
-        app.logStream.on("finish", function() {
-            // More hax. Have to recreate the stream each time through, because the stream has been ended.
-            app.logStream = new MongooseObjectStream(Log);
-
-            app.server.log = bunyan.createLogger({
-                name: "example-logger",
-                level: "debug",
-                stream: app.logStream
-            });
-
+        self.waitForLogs(function() {
             Log.find({}, function(err, logs) {
                 test.ifError(err);
                 test.equal(logs.length, 1);
 
-                var log = logs[0];
-                console.log(logs);
+                var log = logs[0].toObject();
+                test.ok(log.duration > 0);
                 test.equal(log.statusCode, 200);
                 test.equal(log.method, "GET");
-                test.equal(log.route, "/logs");
-
+                test.equal(log.url, "/logs");
+                test.equal(log.userAgent, "Test Runner");
                 test.done();
             })
         });
-        app.logStream.end();
     });
 };

@@ -76,6 +76,7 @@ module.exports = {
         }
         setTimeout(retry.bind(this, test), 25);
     },
+    "Server": require("./src/servertests"),
     "Status Controller": require("./src/controllers/statuscontrollertests"),
     "Log Controller": require("./src/controllers/logcontrollertests"),
     "Shutdown Server": function(test) {

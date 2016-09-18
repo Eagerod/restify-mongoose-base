@@ -27,6 +27,11 @@ var server = restify.createServer({
     log: log
 });
 
+server.use(function(req, res, next) {
+    req._requestStartTime = new Date();
+    next();
+});
+
 // Some basic middleware that will either be needed, or be useful for any kind
 // of moderate extending.
 server.use(restify.acceptParser(server.acceptable));
@@ -41,7 +46,8 @@ server.use(function(req, res, next) {
     req.log = req.log.child({
         url: req.url,
         method: req.method,
-        requestId: uuid.v4()
+        requestId: uuid.v4(),
+        userAgent: req.headers["user-agent"] || "Unknown"
     });
     return next();
 });
@@ -68,6 +74,13 @@ server.on("after", function(req, res, route, err) {
     if ( err ) {
         req.log.warn(err);
     }
+
+    var requestEndTime = new Date();
+    var requestDuration = requestEndTime - req._requestStartTime;
+    req.log.debug({
+        duration: requestDuration,
+        statusCode: res.statusCode
+    });
 });
 
 server.on("uncaughtException", function(req, res, route, err) {
