@@ -4,6 +4,7 @@ services:
   - mongodb
 
 before_script:
+  - mongod --version
   - npm run lint
 
 node_js:
