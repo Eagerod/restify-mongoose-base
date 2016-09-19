@@ -5,6 +5,8 @@
 I made this because I don't particularly like copying out project structure from each of my projects, constantly forgetting to steal certain pieces, or bring in more than is necessary.
 This isn't really something that should be cloned for anything, but rather downloaded and used as a first commit, or even the beginning of a first commit of a project that will host a REST API using Mongoose.
 
+Note: Includes MongoDB queries that require MongoDB 2.6.0 or greater to function. 
+
 This is what this project skeleton includes:
 
 1. Docs dependency
