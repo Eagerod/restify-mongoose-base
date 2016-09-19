@@ -1,16 +1,10 @@
 "use strict";
 
-var bunyan = require("bunyan");
-var mock = require("nodeunit-mock");
-var uuid = require("node-uuid");
-var MongooseObjectStream = require("mongoose-object-stream");
-
-var app = require("../..");
 var Models = require("../../src/models");
 var Log = Models.Log;
 
 var ServerTests = module.exports;
-var LogTests = ServerTests["Logging"] = {};
+var LogTests = ServerTests["Request Logging"] = {};
 
 LogTests["Records Request Information"] = function(test) {
     var self = this;
@@ -38,7 +32,7 @@ LogTests["Records Request Information"] = function(test) {
                 test.equal(log.url, "/logs");
                 test.equal(log.userAgent, "Test Runner");
                 test.done();
-            })
+            });
         });
     });
 };

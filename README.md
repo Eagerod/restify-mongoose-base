@@ -1,5 +1,7 @@
 # Mongoose REST API Starter
 
+[![Build Status](https://travis-ci.org/Eagerod/restify-mongoose-base.svg?branch=master)](https://travis-ci.org/Eagerod/restify-mongoose-base)
+
 I made this because I don't particularly like copying out project structure from each of my projects, constantly forgetting to steal certain pieces, or bring in more than is necessary.
 This isn't really something that should be cloned for anything, but rather downloaded and used as a first commit, or even the beginning of a first commit of a project that will host a REST API using Mongoose.
 
