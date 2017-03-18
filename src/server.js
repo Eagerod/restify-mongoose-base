@@ -9,9 +9,12 @@ var MongooseObjectStream = require("mongoose-object-stream");
 var packageJson = require("../package.json");
 
 var config = require("./config");
-var Log = require("./models").Log;
+var models = require("./models");
 
-var logStream = new MongooseObjectStream(Log);
+var connection = mongoose.connect(config.DATABASE).connection;
+var Models = models(connection);
+
+var logStream = new MongooseObjectStream(Models.Log);
 
 module.exports.logStream = logStream;
 
@@ -55,7 +58,6 @@ server.use(function(req, res, next) {
 module.exports.server = server;
 
 // Only start listening after db connection is open.
-var connection = mongoose.connect(config.DATABASE).connection;
 connection.once("open", function() {
     server.listen(config.PORT, function() {
         server.log.info("%s listening at %s", server.name, server.url);

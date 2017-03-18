@@ -3,9 +3,6 @@
 var mongoose = require("mongoose");
 var mock = require("nodeunit-mock");
 
-var Models = require("../../../src/models");
-var Log = Models.Log;
-
 var StatusControllerTests = module.exports;
 var SystemConfigTests = StatusControllerTests["System Config"] = {};
 var EchoTests = StatusControllerTests["Echo Routes"] = {};
@@ -13,6 +10,7 @@ var DatabaseTests = StatusControllerTests["Database Routes"] = {};
 
 SystemConfigTests["Get Status"] = function(test) {
     test.expect(3);
+
     this.apiCall({url: "http://localhost:8080/status", method: "GET"}, function(err, resp, body) {
         test.ifError(err);
         test.equal(resp.statusCode, 200);
@@ -25,6 +23,7 @@ SystemConfigTests["Get Status"] = function(test) {
 
 SystemConfigTests["Manual Error"] = function(test) {
     test.expect(3);
+
     this.apiCall({url: "http://localhost:8080/error", method: "GET"}, function(err, resp, body) {
         test.ifError(err);
         test.equal(resp.statusCode, 400);
@@ -38,6 +37,7 @@ SystemConfigTests["Manual Error"] = function(test) {
 
 SystemConfigTests["Manual Exception"] = function(test) {
     test.expect(3);
+
     this.apiCall({url: "http://localhost:8080/exception", method: "GET"}, function(err, resp, body) {
         test.ifError(err);
         test.equal(resp.statusCode, 500);
@@ -51,6 +51,7 @@ SystemConfigTests["Manual Exception"] = function(test) {
 
 EchoTests["Success"] = function(test) {
     test.expect(3);
+
     this.apiCall({url: "http://localhost:8080/echo", method: "POST", json: {"a": "b"}}, function(err, resp, body) {
         test.ifError(err);
         test.equal(resp.statusCode, 200);
@@ -61,6 +62,7 @@ EchoTests["Success"] = function(test) {
 
 EchoTests["Failure Content-Type Incorrect"] = function(test) {
     test.expect(3);
+
     this.apiCall({url: "http://localhost:8080/echo", method: "POST", body: "{\"a\": \"b\"}"}, function(err, resp, body) {
         test.ifError(err);
         test.deepEqual(resp.statusCode, 415);
@@ -74,6 +76,7 @@ EchoTests["Failure Content-Type Incorrect"] = function(test) {
 
 DatabaseTests["Success"] = function(test) {
     test.expect(3);
+
     this.apiCall("http://localhost:8080/database", function(err, resp, body) {
         test.ifError(err);
         test.equal(resp.statusCode, 200);
@@ -101,6 +104,8 @@ DatabaseTests["Connections Failing"] = function(test) {
 };
 
 DatabaseTests["Connections Error"] = function(test) {
+    var Log = this.database.models.Log;
+
     test.expect(1);
     mock(test, Log, "find", function(callback) {
         mongoose.connections[0].emit("error");

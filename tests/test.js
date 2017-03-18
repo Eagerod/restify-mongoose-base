@@ -8,9 +8,6 @@ var request = require("request");
 var app = require("..");
 var config = require("../src/config");
 
-var Models = require("../src/models");
-var Log = Models.Log;
-
 if ( process.env.PORT ) {
     throw new Error("Cannot use custom port for test execution.");
 }
@@ -32,8 +29,8 @@ function apiCall(reqObj, callback) {
 
 // Helper function to kill off all models in the database.
 function removeAllModels(callback) {
-    var models = app.database ? app.database.base.models : [];
-    if ( models.length && app.database.db.s.databaseName !== "testdatabase" ) { // Sanity check, really
+    var models = this.database ? this.database.base.models : [];
+    if ( models.length && this.database.db.s.databaseName !== "testdatabase" ) { // Sanity check, really
         throw new Error("Tests being run on non test environment.");
     }
     async.each(models, function(model, cb) {
@@ -45,8 +42,9 @@ function removeAllModels(callback) {
 // logs being present.
 // Calls back when the logger has been ended, has finished writing all outstanding logs, and recreated.
 function waitForLogs(callback) {
+    var self = this;
     app.logStream.on("finish", function() {
-        app.logStream = new MongooseObjectStream(Log);
+        app.logStream = new MongooseObjectStream(self.database.models.Log);
 
         app.server.log = bunyan.createLogger({
             name: "example-logger",
@@ -65,10 +63,12 @@ function waitForLogs(callback) {
 // it's perfectly predictable that they will be the first and last tests to run.
 module.exports = {
     "setUp": function(done) {
-        this.apiCall = apiCall;
-        this.waitForLogs = waitForLogs;
+        this.apiCall = apiCall.bind(this);
+        this.waitForLogs = waitForLogs.bind(this);
+        this.removeAllModels = removeAllModels.bind(this);
+        this.database = app.database;
 
-        removeAllModels(done);
+        this.removeAllModels(done);
     },
     "Start Server": function retry(test) {
         if ( app.serving ) {

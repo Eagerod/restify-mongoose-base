@@ -1,12 +1,11 @@
 "use strict";
 
-var Models = require("../../src/models");
-var Log = Models.Log;
-
 var ServerTests = module.exports;
 var LogTests = ServerTests["Request Logging"] = {};
 
 LogTests["Records Request Information"] = function(test) {
+    var Log = this.database.models.Log;
+
     var self = this;
 
     test.expect(10);

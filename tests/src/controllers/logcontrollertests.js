@@ -4,8 +4,6 @@ var mock = require("nodeunit-mock");
 var uuid = require("node-uuid");
 
 var app = require("../../..");
-var Models = require("../../../src/models");
-var Log = Models.Log;
 
 var LogControllerTests = module.exports;
 var LogTests = LogControllerTests["GET /logs"] = {};
@@ -46,10 +44,9 @@ LogTests.setUp = function(done) {
 };
 
 LogTests["Success"] = function(test) {
-    var self = this;
     test.expect(3);
 
-    self.apiCall("http://localhost:8080/logs", function(err, resp, body) {
+    this.apiCall("http://localhost:8080/logs", function(err, resp, body) {
         test.ifError(err);
         test.equal(body.length, 2);
 
@@ -70,10 +67,9 @@ LogTests["Success"] = function(test) {
 };
 
 LogTests["Success Level Provided"] = function(test) {
-    var self = this;
     test.expect(3);
 
-    self.apiCall("http://localhost:8080/logs?level=debug", function(err, resp, body) {
+    this.apiCall("http://localhost:8080/logs?level=debug", function(err, resp, body) {
         test.ifError(err);
         test.equal(body.length, 3);
 
@@ -95,7 +91,8 @@ LogTests["Success Level Provided"] = function(test) {
 };
 
 LogTests["Database Error"] = function(test) {
-    var self = this;
+    var Log = this.database.models.Log;
+
     test.expect(3);
 
     mock(test, Log, "aggregate", function() {
@@ -104,7 +101,7 @@ LogTests["Database Error"] = function(test) {
         callback(new Error("Failed to database"));
     });
 
-    self.apiCall("http://localhost:8080/logs", function(err, resp, body) {
+    this.apiCall("http://localhost:8080/logs", function(err, resp, body) {
         test.ifError(err);
         test.equal(resp.statusCode, 500);
         test.deepEqual(body, {

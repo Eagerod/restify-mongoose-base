@@ -4,16 +4,25 @@
 */
 "use strict";
 
-var mongoose = require("mongoose");
+var util = require("util");
 
+var mongoose = require("mongoose");
 
 /**
     @class Log
     @classdesc Schema that provides a couple indexes where allowed for bunyan logs.
 */
-var logSchema = new mongoose.Schema({
-    level: {type: Number, index: true},
-    time: {type: Date, index: true}
-}, {strict: false});
+function LogSchema() {
+    mongoose.Schema.call(this, {}, {strict: false});
 
-module.exports = mongoose.model("Log", logSchema);
+    this.add({
+        level: {type: Number, index: true},
+        time: {type: Date, index: true}
+    });
+}
+
+util.inherits(LogSchema, mongoose.Schema);
+
+module.exports = function(database) {
+    return database.model("Log", new LogSchema());
+};
