@@ -100,4 +100,4 @@ process.on("uncaughtException", function(exc) {
 });
 
 // Routes
-require("./routes")(server);
+require("./routes")(server, connection);

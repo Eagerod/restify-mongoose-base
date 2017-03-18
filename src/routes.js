@@ -1,8 +1,6 @@
 "use strict";
 
 var Controllers = require("./controllers");
-var LogController = Controllers.LogController;
-var StatusController = Controllers.StatusController;
 
 var lumen = require("./lumina-config");
 
@@ -15,8 +13,9 @@ var lumen = require("./lumina-config");
     @property server {Restify} The restify server that the routes will all be
     configured on.
 */
-function Router(server) {
+function Router(server, database) {
     this.server = server;
+    this.database = database;
 }
 
 /**
@@ -32,19 +31,23 @@ function Router(server) {
     @property /echo {POST} Return the JSON object the user sends in.
 */
 Router.prototype.configureStatusController = function() {
-    this.server.get("/status", lumen.illuminate(StatusController.getStatus));
-    this.server.get("/database", lumen.illuminate(StatusController.database));
-    this.server.get("/error", lumen.illuminate(StatusController.manualError));
-    this.server.get("/exception", lumen.illuminate(StatusController.manualException));
-    this.server.post("/echo", lumen.illuminate(StatusController.echo));
+    var statusController = new Controllers.StatusController(this.database);
+
+    this.server.get("/status", lumen.illuminate(statusController.getStatus()));
+    this.server.get("/database", lumen.illuminate(statusController.databaseStatus()));
+    this.server.get("/error", lumen.illuminate(statusController.manualError()));
+    this.server.get("/exception", lumen.illuminate(statusController.manualException()));
+    this.server.post("/echo", lumen.illuminate(statusController.echo()));
 };
 
 Router.prototype.configureLogController = function() {
-    this.server.get("/logs", lumen.illuminate(LogController.get));
+    var logController = new Controllers.LogController(this.database);
+
+    this.server.get("/logs", lumen.illuminate(logController.get()));
 };
 
-module.exports = function(server) {
-    var router = new Router(server);
+module.exports = function(server, database) {
+    var router = new Router(server, database);
     router.configureStatusController();
     router.configureLogController();
 };

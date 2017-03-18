@@ -1,6 +1,5 @@
 "use strict";
 
-var mongoose = require("mongoose");
 var restify = require("restify");
 
 /**
@@ -9,7 +8,6 @@ var restify = require("restify");
     routes that can be used for making sure that the server is up and running,
     and also that different error handlers are logging the way that they should.
 */
-var StatusController = module.exports;
 
 /**
     @function StatusController#getStatus
@@ -17,13 +15,11 @@ var StatusController = module.exports;
 
     @returns 200 and a JSON object.
 */
-StatusController.getStatus = {
-    handler: function(req, res, next) {
-        res.status(200);
-        res.send({status: "All systems operational."});
-        return next();
-    }
-};
+function getStatusHandler(req, res, next) {
+    res.status(200);
+    res.send({status: "All systems operational."});
+    return next();
+}
 
 /**
     @function StatusController#manualError
@@ -32,11 +28,9 @@ StatusController.getStatus = {
 
     @returns A restify-handled error as one would appear in normal running code.
 */
-StatusController.manualError = {
-    handler: function(req, res, next) {
-        next(new restify.BadRequestError("I've made a huge mistake."));
-    }
-};
+function manualErrorHandler(req, res, next) {
+    next(new restify.BadRequestError("I've made a huge mistake."));
+}
 
 /**
     @function StatusController#manualException
@@ -44,39 +38,35 @@ StatusController.manualError = {
 
     @throws An error that is handled by the restify uncaughtException handler.
 */
-StatusController.manualException = {
-    handler: function() {
-        throw new Error("I've made a critical mistake.");
-    }
-};
+function manualExceptionHandler() {
+    throw new Error("I've made a critical mistake.");
+}
 
 /**
     @function StatusController#database
     @desc Get the current status of the database.
 */
-StatusController.database = {
-    handler: function(req, res, next) {
-        var badConnections = mongoose.connections.filter(function(connection) {
-            return connection.readyState !== 1;
+function databaseStatusHandler(req, res, next) {
+    var badConnections = this.database.base.connections.filter(function(connection) {
+        return connection.name && connection.readyState !== 1;
+    });
+
+    if (badConnections.length) {
+        req.log.error({
+            msg: "Database connections failing",
+            connections: badConnections.map(function(connection) {
+                return connection.host + ":" + connection.port;
+            })
         });
-
-        if (badConnections.length) {
-            req.log.error({
-                msg: "Database connections failing",
-                connections: badConnections.map(function(connection) {
-                    return connection.host + ":" + connection.port;
-                })
-            });
-            res.status(500);
-            res.end();
-            return next();
-        }
-
-        res.status(200);
-        res.send();
+        res.status(500);
+        res.end();
         return next();
     }
-};
+
+    res.status(200);
+    res.send();
+    return next();
+}
 
 /**
     @function StatusController#echo
@@ -85,10 +75,44 @@ StatusController.database = {
 
     @returns The request body.
 */
-StatusController.echo = {
-    handler: function(req, res, next) {
-        res.status(200);
-        res.send(req.body);
-        return next();
-    }
+function echoHandler(req, res, next) {
+    res.status(200);
+    res.send(req.body);
+    return next();
+}
+
+function StatusController(database) {
+    this.database = database;
+}
+
+StatusController.prototype.getStatus = function() {
+    return {
+        handler: getStatusHandler.bind(this)
+    };
 };
+
+StatusController.prototype.manualError = function() {
+    return {
+        handler: manualErrorHandler.bind(this)
+    };
+};
+
+StatusController.prototype.manualException = function() {
+    return {
+        handler: manualExceptionHandler.bind(this)
+    };
+};
+
+StatusController.prototype.databaseStatus = function() {
+    return {
+        handler: databaseStatusHandler.bind(this)
+    };
+};
+
+StatusController.prototype.echo = function() {
+    return {
+        handler: echoHandler.bind(this)
+    };
+};
+
+module.exports = StatusController;
