@@ -30,7 +30,7 @@ function apiCall(reqObj, callback) {
 // Helper function to kill off all models in the database.
 function removeAllModels(callback) {
     var models = this.database ? this.database.base.models : [];
-    if ( models.length && this.database.db.s.databaseName !== "testdatabase" ) { // Sanity check, really
+    if ( Object.keys(models).length && this.database.db.s.databaseName !== "testdatabase" ) { // Sanity check, really
         throw new Error("Tests being run on non test environment.");
     }
     async.each(models, function(model, cb) {
